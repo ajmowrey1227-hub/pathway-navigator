@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Pathway Navigator | i.c.stars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init('YtHI5qdcIqCZAdG-7');
+    })();
+  </script>
+</head>
+<body>
+  <a href="#main-content" id="skip-link" class="skip-link">Skip to main content</a>
+  <div id="starfield" class="starfield" aria-hidden="true"></div>
+  <div id="constellations" class="constellations" aria-hidden="true"></div>
+  <div id="transition-layer" class="transition-layer" aria-hidden="true"></div>
+  <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <main class="app" id="main-content" role="main" tabindex="-1">
+    <!-- START / LANDING -->
+    <section id="start" class="screen active">
+      <div class="start-content">
+        <div class="logo-block">
+          <img src="icstars-logo.png" alt="i.c.stars" class="logo-img" />
+        </div>
+        <h1 class="title">Tech Pathway Navigator</h1>
+        <p class="tagline">Discover your path. Build your future.</p>
+        <p class="intro">Answer a few questions and we’ll match you with tech roles that fit your interests and goals—plus detailed steps and resources to get there.</p>
+        <div class="start-selectors">
+          <div class="start-name">
+            <label for="intern-name" class="selector-label" id="name-label-text">Your name (optional)</label>
+            <input id="intern-name" class="name-input" type="text" maxlength="80" autocomplete="name" />
+          </div>
+          <label for="region-select" class="selector-label" id="region-label-text">Your region</label>
+          <select id="region-select" class="selector-select" aria-labelledby="region-label-text">
+            <option value="chicago">Chicago</option>
+            <option value="milwaukee">Milwaukee</option>
+            <option value="kansas_city">Kansas City</option>
+          </select>
+          <label for="lang-select" class="selector-label" id="lang-label-text">Language</label>
+          <select id="lang-select" class="selector-select" aria-labelledby="lang-label-text">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-primary btn-start" id="btn-start">Start Your Journey</button>
+      </div>
+    </section>
+
+    <!-- PROGRESS BAR (shown during quiz) -->
+    <div id="progress-wrap" class="progress-wrap hidden">
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <span id="progress-text" class="progress-text">Step 1 of 6</span>
+    </div>
+
+    <!-- QUIZ STEPS -->
+    <section id="quiz" class="screen">
+      <div class="quiz-inner">
+        <div id="step-container" class="step-container"></div>
+        <div class="nav-buttons">
+          <button type="button" class="btn btn-secondary" id="btn-back">Back</button>
+          <button type="button" class="btn btn-primary" id="btn-next">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results" class="screen">
+      <div class="results-inner">
+        <h2 class="results-title">Your Tech Pathway Results</h2>
+        <section id="coach-summary" class="coach-summary" hidden aria-label="Coach summary view"></section>
+        <p class="results-name" id="results-name"></p>
+        <p class="results-intro">Based on your answers, here are your top matches. Tap a card to dive deeper.</p>
+        <p class="results-nudge" id="results-nudge"></p>
+        <div id="role-strip" class="role-strip" aria-hidden="true"></div>
+        <div id="result-cards" class="result-cards"></div>
+        <section class="feedback" aria-labelledby="feedback-title">
+          <h3 id="feedback-title" class="feedback-title">How helpful was this navigator?</h3>
+          <div class="feedback-options" role="radiogroup" aria-label="Navigator feedback">
+            <button type="button" class="feedback-option" data-score="1">Not clear</button>
+            <button type="button" class="feedback-option" data-score="2">A little helpful</button>
+            <button type="button" class="feedback-option" data-score="3">Helpful</button>
+            <button type="button" class="feedback-option" data-score="4">Very helpful</button>
+          </div>
+          <label for="feedback-text" class="feedback-label">Optional feedback</label>
+          <textarea id="feedback-text" class="feedback-text" rows="3" placeholder="Share anything that would make this more helpful for you or other interns."></textarea>
+          <button type="button" class="btn btn-secondary feedback-submit" id="feedback-submit">Submit feedback</button>
+          <p id="feedback-thanks" class="feedback-thanks" hidden>Thank you for your feedback.</p>
+        </section>
+        <div class="results-actions">
+          <button type="button" class="btn btn-secondary" id="btn-share">Email / Share My Plan</button>
+          <button type="button" class="btn btn-primary" id="btn-to-resources">View All Resources</button>
+          <button type="button" class="btn btn-secondary" id="btn-retake">Retake Navigator</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" class="screen">
+      <div class="resources-inner">
+        <h2 class="resources-title">Resources to Get There</h2>
+        <p class="resources-intro">Certifications, learning platforms, and links to help you land your target role.</p>
+        <div id="resources-list" class="resources-list"></div>
+        <div class="resources-actions">
+          <button type="button" class="btn btn-secondary" id="btn-back-to-results">Back to Results</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="translations.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
