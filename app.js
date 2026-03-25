@@ -36,17 +36,17 @@
   const ROLE_CERT_RECS = {
     developer: ['freeCodeCamp', 'Codecademy'],
     webdev: ['freeCodeCamp', 'Codecademy'],
-    data: ['Google Data Analytics Certificate', 'CompTIA Data+'],
+    data: ['Google Data Analytics Certificate', 'CompTIA Data+', 'Microsoft Power BI Data Analyst (PL-300)'],
     dba: ['CompTIA Data+', 'Google Data Analytics Certificate'],
     security: ['CompTIA Security+', 'CompTIA Network+'],
-    cloud: ['AWS Certified Cloud Practitioner', 'Microsoft Azure Fundamentals (AZ-900)', 'CompTIA Cloud+'],
-    support: ['CompTIA A+'],
-    techsupport: ['CompTIA A+'],
-    pm: ['Certified ScrumMaster (CSM)'],
+    cloud: ['AWS Certified Cloud Practitioner', 'Microsoft Azure Fundamentals (AZ-900)', 'CompTIA Cloud+', 'AWS Certified Solutions Architect – Associate'],
+    support: ['CompTIA A+', 'Google IT Support Professional Certificate'],
+    techsupport: ['CompTIA A+', 'Google IT Support Professional Certificate'],
+    pm: ['Certified ScrumMaster (CSM)', 'CAPM (Project Management)', 'PMI-ACP (Agile Certified Practitioner)'],
     qa: ['ISTQB Foundation (QA)'],
     ux: ['Google UX Design Certificate'],
     digital: ['Google Career Certificates'],
-    analyst: ['Google Data Analytics Certificate'],
+    analyst: ['Google Data Analytics Certificate', 'ECBA (Business Analysis)'],
     impl: ['Certified ScrumMaster (CSM)'],
   };
 
@@ -93,6 +93,12 @@
     'Google UX Design Certificate': 'G',
     'Certified ScrumMaster (CSM)': 'SM',
     'ISTQB Foundation (QA)': 'QA',
+    'CAPM (Project Management)': 'PM',
+    'PMI-ACP (Agile Certified Practitioner)': 'AP',
+    'ECBA (Business Analysis)': 'BA',
+    'Google IT Support Professional Certificate': 'IT',
+    'AWS Certified Solutions Architect – Associate': 'SA',
+    'Microsoft Power BI Data Analyst (PL-300)': 'BI',
     GitHub: '{ }',
     TryHackMe: 'TH',
     'Hack The Box': 'HTB',
@@ -496,10 +502,8 @@
       }
     }
 
-    const maxScore = topIds.reduce((max, id) => Math.max(max, scores[id] || 0), 0) || 1;
-
     resultCards.innerHTML = topIds
-      .map((id) => {
+      .map((id, index) => {
         const career = careers[id];
         const deep = deepDives[id];
         const careerT = TRANSLATIONS[lang]?.careers?.[id];
@@ -512,12 +516,11 @@
           .join('');
         const salary = getSalaryForCareer(id);
 
-        const fitScoreRaw = scores[id] || 0;
-        const fitPercent = Math.max(10, Math.round((fitScoreRaw / maxScore) * 100));
+        const rankNumber = index + 1;
         const fitRing = `
-          <div class="fit-ring" style="--fit: ${fitPercent}">
+          <div class="fit-ring">
             <div class="fit-ring-inner">
-              <span class="fit-ring-value">${fitPercent}<span class="fit-ring-unit">%</span></span>
+              <span class="fit-ring-value">${rankNumber}</span>
             </div>
           </div>
         `;

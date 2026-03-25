@@ -678,6 +678,12 @@ const PATHWAY_DATA = {
         { name: 'Google UX Design Certificate', desc: 'Coursera-based certificate for UX research and design.', url: 'https://www.coursera.org/professional-certificates/google-ux-design' },
         { name: 'Certified ScrumMaster (CSM)', desc: 'Scrum Alliance certification for Scrum Masters.', url: 'https://www.scrumalliance.org/get-certified/scrum-master' },
         { name: 'ISTQB Foundation (QA)', desc: 'Foundation-level software testing certification.', url: 'https://www.istqb.org/certification-path-root/foundation-level-2018.html' },
+        { name: 'CAPM (Project Management)', desc: 'PMI’s entry-level Certified Associate in Project Management. Great starting point for PM roles.', url: 'https://www.pmi.org/certifications/certified-associate-capm' },
+        { name: 'PMI-ACP (Agile Certified Practitioner)', desc: 'PMI’s agile-focused certification for project and product roles.', url: 'https://www.pmi.org/certifications/agile-acp' },
+        { name: 'ECBA (Business Analysis)', desc: 'Entry Certificate in Business Analysis from IIBA for aspiring business analysts.', url: 'https://www.iiba.org/business-analysis-certifications/ecba/' },
+        { name: 'Google IT Support Professional Certificate', desc: 'Entry-level IT support certificate from Google, good for help desk and support roles.', url: 'https://www.coursera.org/professional-certificates/google-it-support' },
+        { name: 'AWS Certified Solutions Architect – Associate', desc: 'Associate-level AWS certification for designing cloud solutions.', url: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/' },
+        { name: 'Microsoft Power BI Data Analyst (PL-300)', desc: 'Microsoft certification focused on data modeling and visualization in Power BI.', url: 'https://learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst-associate/' },
       ],
     },
     {
