@@ -108,6 +108,22 @@
     'i.c.stars': '*',
   };
 
+  function debugLog(hypothesisId, location, message, data = {}, runId = 'initial') {
+    fetch('http://127.0.0.1:7643/ingest/1c642aa4-8fc3-42c9-a286-f3411100790e', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '7005c9' },
+      body: JSON.stringify({
+        sessionId: '7005c9',
+        runId,
+        hypothesisId,
+        location,
+        message,
+        data,
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+  }
+
   function t(key, params = {}) {
     const keys = key.split('.');
     let val = TRANSLATIONS[lang];
@@ -144,6 +160,9 @@
 
     if (id === 'results') announce(t('results.title'));
     if (id === 'resources') {
+      // #region agent log
+      debugLog('H3', 'app.js:showScreen', 'Resources screen opened', { id });
+      // #endregion
       announce(t('resources.title'));
       requestAnimationFrame(() => {
         screens.resources?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -745,6 +764,38 @@
 
     resourcesList.innerHTML = recommendedSection + categoriesHtml;
 
+    const resourceAnchors = resourcesList.querySelectorAll('a.resource-item');
+    const brokenCandidates = [];
+    resourceAnchors.forEach((anchor) => {
+      const href = anchor.getAttribute('href') || '';
+      if (!/^https?:\/\/[^ ]+$/i.test(href)) {
+        brokenCandidates.push(href || '(empty)');
+      }
+    });
+    // #region agent log
+    debugLog('H1', 'app.js:renderResources', 'Resource URL validation snapshot', {
+      totalAnchors: resourceAnchors.length,
+      brokenCandidates,
+    });
+    // #endregion
+
+    if (!resourcesList.dataset.debugClickBound) {
+      resourcesList.addEventListener('click', (e) => {
+        const link = e.target.closest('a.resource-item');
+        if (!link) return;
+        // #region agent log
+        debugLog('H2', 'app.js:renderResources.click', 'Resource item click observed', {
+          href: link.getAttribute('href') || '',
+          target: link.getAttribute('target') || '',
+          rel: link.getAttribute('rel') || '',
+          text: (link.querySelector('.resource-item-name')?.textContent || '').trim(),
+          isTrusted: !!e.isTrusted,
+        });
+        // #endregion
+      });
+      resourcesList.dataset.debugClickBound = '1';
+    }
+
     const resourcesTitle = $('.resources-title', screens.resources);
     const resourcesIntro = $('.resources-intro', screens.resources);
     const btnBack = $('#btn-back-to-results');
@@ -988,6 +1039,13 @@
     renderResources();
     renderNavButtons();
     bindEvents();
+    // #region agent log
+    debugLog('H4', 'app.js:init', 'Client environment snapshot', {
+      userAgent: navigator.userAgent,
+      viewport: `${window.innerWidth}x${window.innerHeight}`,
+      hasTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+    });
+    // #endregion
 
     const starfieldEl = $('#starfield');
     const constellationsEl = $('#constellations');
