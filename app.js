@@ -36,17 +36,17 @@
   const ROLE_CERT_RECS = {
     developer: ['freeCodeCamp', 'Codecademy'],
     webdev: ['freeCodeCamp', 'Codecademy'],
-    data: ['Google Data Analytics Certificate', 'CompTIA Data+'],
+    data: ['Google Data Analytics Certificate', 'CompTIA Data+', 'Microsoft Power BI Data Analyst (PL-300)'],
     dba: ['CompTIA Data+', 'Google Data Analytics Certificate'],
     security: ['CompTIA Security+', 'CompTIA Network+'],
-    cloud: ['AWS Certified Cloud Practitioner', 'Microsoft Azure Fundamentals (AZ-900)', 'CompTIA Cloud+'],
-    support: ['CompTIA A+'],
-    techsupport: ['CompTIA A+'],
-    pm: ['Certified ScrumMaster (CSM)'],
+    cloud: ['AWS Certified Cloud Practitioner', 'Microsoft Azure Fundamentals (AZ-900)', 'CompTIA Cloud+', 'AWS Certified Solutions Architect – Associate'],
+    support: ['CompTIA A+', 'Google IT Support Professional Certificate'],
+    techsupport: ['CompTIA A+', 'Google IT Support Professional Certificate'],
+    pm: ['Certified ScrumMaster (CSM)', 'CAPM (Project Management)', 'PMI-ACP (Agile Certified Practitioner)'],
     qa: ['ISTQB Foundation (QA)'],
     ux: ['Google UX Design Certificate'],
     digital: ['Google Career Certificates'],
-    analyst: ['Google Data Analytics Certificate'],
+    analyst: ['Google Data Analytics Certificate', 'ECBA (Business Analysis)'],
     impl: ['Certified ScrumMaster (CSM)'],
   };
 
@@ -93,6 +93,12 @@
     'Google UX Design Certificate': 'G',
     'Certified ScrumMaster (CSM)': 'SM',
     'ISTQB Foundation (QA)': 'QA',
+    'CAPM (Project Management)': 'PM',
+    'PMI-ACP (Agile Certified Practitioner)': 'AP',
+    'ECBA (Business Analysis)': 'BA',
+    'Google IT Support Professional Certificate': 'IT',
+    'AWS Certified Solutions Architect – Associate': 'SA',
+    'Microsoft Power BI Data Analyst (PL-300)': 'BI',
     GitHub: '{ }',
     TryHackMe: 'TH',
     'Hack The Box': 'HTB',
@@ -101,6 +107,22 @@
     Glassdoor: 'GD',
     'i.c.stars': '*',
   };
+
+  function debugLog(hypothesisId, location, message, data = {}, runId = 'initial') {
+    fetch('http://127.0.0.1:7643/ingest/1c642aa4-8fc3-42c9-a286-f3411100790e', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '7005c9' },
+      body: JSON.stringify({
+        sessionId: '7005c9',
+        runId,
+        hypothesisId,
+        location,
+        message,
+        data,
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+  }
 
   function t(key, params = {}) {
     const keys = key.split('.');
@@ -138,6 +160,9 @@
 
     if (id === 'results') announce(t('results.title'));
     if (id === 'resources') {
+      // #region agent log
+      debugLog('H3', 'app.js:showScreen', 'Resources screen opened', { id });
+      // #endregion
       announce(t('resources.title'));
       requestAnimationFrame(() => {
         screens.resources?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -496,10 +521,8 @@
       }
     }
 
-    const maxScore = topIds.reduce((max, id) => Math.max(max, scores[id] || 0), 0) || 1;
-
     resultCards.innerHTML = topIds
-      .map((id) => {
+      .map((id, index) => {
         const career = careers[id];
         const deep = deepDives[id];
         const careerT = TRANSLATIONS[lang]?.careers?.[id];
@@ -512,12 +535,11 @@
           .join('');
         const salary = getSalaryForCareer(id);
 
-        const fitScoreRaw = scores[id] || 0;
-        const fitPercent = Math.max(10, Math.round((fitScoreRaw / maxScore) * 100));
+        const rankNumber = index + 1;
         const fitRing = `
-          <div class="fit-ring" style="--fit: ${fitPercent}">
+          <div class="fit-ring">
             <div class="fit-ring-inner">
-              <span class="fit-ring-value">${fitPercent}<span class="fit-ring-unit">%</span></span>
+              <span class="fit-ring-value">${rankNumber}</span>
             </div>
           </div>
         `;
@@ -741,6 +763,38 @@
       .join('');
 
     resourcesList.innerHTML = recommendedSection + categoriesHtml;
+
+    const resourceAnchors = resourcesList.querySelectorAll('a.resource-item');
+    const brokenCandidates = [];
+    resourceAnchors.forEach((anchor) => {
+      const href = anchor.getAttribute('href') || '';
+      if (!/^https?:\/\/[^ ]+$/i.test(href)) {
+        brokenCandidates.push(href || '(empty)');
+      }
+    });
+    // #region agent log
+    debugLog('H1', 'app.js:renderResources', 'Resource URL validation snapshot', {
+      totalAnchors: resourceAnchors.length,
+      brokenCandidates,
+    });
+    // #endregion
+
+    if (!resourcesList.dataset.debugClickBound) {
+      resourcesList.addEventListener('click', (e) => {
+        const link = e.target.closest('a.resource-item');
+        if (!link) return;
+        // #region agent log
+        debugLog('H2', 'app.js:renderResources.click', 'Resource item click observed', {
+          href: link.getAttribute('href') || '',
+          target: link.getAttribute('target') || '',
+          rel: link.getAttribute('rel') || '',
+          text: (link.querySelector('.resource-item-name')?.textContent || '').trim(),
+          isTrusted: !!e.isTrusted,
+        });
+        // #endregion
+      });
+      resourcesList.dataset.debugClickBound = '1';
+    }
 
     const resourcesTitle = $('.resources-title', screens.resources);
     const resourcesIntro = $('.resources-intro', screens.resources);
@@ -985,6 +1039,13 @@
     renderResources();
     renderNavButtons();
     bindEvents();
+    // #region agent log
+    debugLog('H4', 'app.js:init', 'Client environment snapshot', {
+      userAgent: navigator.userAgent,
+      viewport: `${window.innerWidth}x${window.innerHeight}`,
+      hasTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+    });
+    // #endregion
 
     const starfieldEl = $('#starfield');
     const constellationsEl = $('#constellations');
