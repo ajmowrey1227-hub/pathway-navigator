@@ -111,9 +111,9 @@
   function debugLog(hypothesisId, location, message, data = {}, runId = 'initial') {
     fetch('http://127.0.0.1:7643/ingest/1c642aa4-8fc3-42c9-a286-f3411100790e', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '7005c9' },
+      headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': 'a539be' },
       body: JSON.stringify({
-        sessionId: '7005c9',
+        sessionId: 'a539be',
         runId,
         hypothesisId,
         location,
@@ -536,13 +536,8 @@
         const salary = getSalaryForCareer(id);
 
         const rankNumber = index + 1;
-        const fitRing = `
-          <div class="fit-ring">
-            <div class="fit-ring-inner">
-              <span class="fit-ring-value">${rankNumber}</span>
-            </div>
-          </div>
-        `;
+        const rankLabel = lang === 'es' ? 'Coincidencia' : 'Match';
+        const rankMarkup = `<span class="result-rank-num" aria-label="${rankLabel} ${rankNumber}">${rankNumber}</span>`;
 
         const badges = CAREER_BADGES[id] || [];
         const badgesHtml =
@@ -571,7 +566,7 @@
                 ${badgesHtml || ''}
               </div>
               <div class="result-card-header-right">
-                ${fitRing}
+                ${rankMarkup}
                 <span class="result-card-toggle" aria-hidden="true">▼</span>
               </div>
             </div>
@@ -592,6 +587,8 @@
                 <div class="deep-dive-section">
                   <h4>${t('results.salaryRange', { region: regionName })}</h4>
                   <p>${escapeHtml(salary)}</p>
+                  <p class="salary-meta">${escapeHtml(t('results.salaryApprox'))}</p>
+                  <p class="salary-reviewed">${escapeHtml(t('results.salaryReviewed'))}</p>
                 </div>
                 ${
                   userSummary
@@ -695,6 +692,8 @@
     const btnRetake = $('#btn-retake');
     if (resultsTitle) resultsTitle.textContent = t('results.title');
     if (resultsIntro) resultsIntro.textContent = t('results.intro');
+    const resultsDisclaimer = $('#results-disclaimer');
+    if (resultsDisclaimer) resultsDisclaimer.textContent = t('results.disclaimer');
     if (btnResources) btnResources.textContent = t('results.viewResources');
     if (btnRetake) btnRetake.textContent = t('results.retake');
   }
@@ -846,6 +845,13 @@
 
   function goNext() {
     const steps = PATHWAY_DATA.steps;
+    // #region agent log
+    debugLog('H5', 'app.js:goNext.entry', 'Next clicked', {
+      currentStep,
+      hasAnswer: !!answers[currentStep],
+      totalSteps: steps.length,
+    });
+    // #endregion
     // Prevent moving forward if no answer selected for this step
     if (!answers[currentStep]) {
       const errorEl = $('#step-error', stepContainer);
@@ -861,6 +867,11 @@
       if (firstOption) {
         firstOption.focus();
       }
+      // #region agent log
+      debugLog('H5', 'app.js:goNext.blocked', 'Navigation blocked due to missing answer', {
+        stepId: steps[currentStep]?.id || null,
+      });
+      // #endregion
       return;
     }
 
@@ -1008,10 +1019,20 @@
         comments: text || '(none provided)',
         top_roles: roles,
       };
+      // #region agent log
+      debugLog('H6', 'app.js:feedbackSubmit.beforeSend', 'Submitting feedback payload', {
+        hasScore: feedbackScore !== null,
+        hasComments: !!text,
+        roleCount: topIds.length,
+      });
+      // #endregion
 
       emailjs
         .send('service_646wubo', 'template_mpddisi', templateParams)
         .then(() => {
+          // #region agent log
+          debugLog('H6', 'app.js:feedbackSubmit.success', 'EmailJS send succeeded', {});
+          // #endregion
           if (feedbackThanks) {
             feedbackThanks.hidden = false;
           }
@@ -1022,6 +1043,13 @@
           }
         })
         .catch((err) => {
+          // #region agent log
+          debugLog('H6', 'app.js:feedbackSubmit.error', 'EmailJS send failed', {
+            name: err?.name || null,
+            text: err?.text || null,
+            status: err?.status || null,
+          });
+          // #endregion
           console.error('EmailJS feedback error:', err);
         });
     });
@@ -1044,6 +1072,7 @@
       userAgent: navigator.userAgent,
       viewport: `${window.innerWidth}x${window.innerHeight}`,
       hasTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+      emailJsLoaded: typeof emailjs !== 'undefined',
     });
     // #endregion
 

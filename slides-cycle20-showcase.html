@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Pathway Navigator — Cycle 20 Showcase | i.c.stars</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --bg-card: #141416;
+      --red-primary: #c41e3a;
+      --red-bright: #e63950;
+      --star: #ffd700;
+      --star-sparkle: #fff8dc;
+      --text: #f0f0f2;
+      --text-muted: #9a9aa5;
+      --border: #2a2a2e;
+      --radius: 12px;
+      --font: 'Outfit', -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .deck-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse 120% 100% at 50% 0%, #1a0a0d 0%, var(--bg) 50%, #050506 100%);
+      pointer-events: none;
+    }
+
+    .deck-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255, 215, 0, 0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 60%, rgba(255, 248, 220, 0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 15%, rgba(255, 215, 0, 0.25) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 45%, rgba(255, 215, 0, 0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 80%, rgba(255, 248, 220, 0.15) 0%, transparent 100%);
+      opacity: 0.9;
+    }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 3rem;
+    }
+
+    .slide {
+      display: none;
+      width: min(1040px, 94vw);
+      max-height: 86vh;
+      padding: 2rem 2.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: block;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide h1 {
+      font-size: clamp(1.6rem, 3.8vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+    }
+
+    .slide h1 .accent { color: var(--red-bright); }
+
+    .slide h2 {
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      font-weight: 600;
+      color: var(--star-sparkle);
+      margin-bottom: 0.85rem;
+      border-left: 4px solid var(--red-primary);
+      padding-left: 0.75rem;
+    }
+
+    .slide p, .slide li {
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-bottom: 0.55rem;
+    }
+
+    .slide ul { margin: 0.5rem 0 0 1.15rem; }
+    .slide li { margin-bottom: 0.4rem; color: var(--text); }
+    .slide strong { color: var(--text); font-weight: 600; }
+
+    .tagline {
+      font-size: 1rem;
+      color: var(--red-bright);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .logo-row span { color: var(--star); }
+
+    .slide-hero {
+      display: grid;
+      grid-template-columns: 1fr min(200px, 32vw);
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 640px) {
+      .slide-hero { grid-template-columns: 1fr; }
+    }
+
+    .hero-logo {
+      width: 100%;
+      max-width: 180px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 4px 20px rgba(196, 30, 58, 0.25));
+    }
+
+    .slide-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 0.75rem;
+    }
+
+    @media (max-width: 720px) {
+      .slide-grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .slide-panel {
+      padding: 1rem 1.1rem;
+      background: rgba(20, 20, 22, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .slide-panel h3 {
+      font-size: 0.95rem;
+      color: var(--star-sparkle);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+    }
+
+    @media (max-width: 800px) {
+      .flow-steps { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .flow-step {
+      text-align: center;
+      padding: 0.85rem 0.5rem;
+      background: rgba(196, 30, 58, 0.12);
+      border: 1px solid rgba(196, 30, 58, 0.35);
+      border-radius: 10px;
+    }
+
+    .flow-step .icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.35rem;
+      line-height: 1;
+    }
+
+    .flow-step .label {
+      font-size: 0.8rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .flow-step .sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .mock-browser {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0d0d0f;
+      margin-top: 0.75rem;
+    }
+
+    .mock-browser-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.65rem;
+      background: #1a1a1e;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mock-browser-bar span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #444;
+    }
+
+    .mock-browser-bar span:nth-child(1) { background: #ff5f57; }
+    .mock-browser-bar span:nth-child(2) { background: #febc2e; }
+    .mock-browser-bar span:nth-child(3) { background: #28c840; }
+
+    .mock-browser-body {
+      min-height: 0;
+      background: #0a0a0b;
+      padding: 0;
+      line-height: 0;
+    }
+
+    .mock-browser-body img {
+      width: 100%;
+      height: auto;
+      display: block;
+      vertical-align: top;
+    }
+
+    .try-layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .try-layout { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    }
+
+    .qr-box {
+      text-align: center;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .qr-box img {
+      display: block;
+      width: 220px;
+      height: 220px;
+      max-width: 100%;
+      image-rendering: pixelated;
+    }
+
+    .qr-box .url-caption {
+      margin-top: 0.65rem;
+      font-size: 0.72rem;
+      color: #333;
+      word-break: break-all;
+      max-width: 240px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.65rem;
+    }
+
+    .pill {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.65rem;
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      border-radius: 999px;
+      color: var(--star-sparkle);
+    }
+
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      background: rgba(10, 10, 11, 0.92);
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer-bar kbd {
+      display: inline-block;
+      padding: 0.12rem 0.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      color: var(--star-sparkle);
+    }
+
+    .img-strip {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+      align-items: center;
+    }
+
+    .img-strip img {
+      max-height: 56px;
+      width: auto;
+      opacity: 0.95;
+    }
+
+    .slide-kicker {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--red-bright);
+      margin: 0 0 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-bg" aria-hidden="true"></div>
+
+  <div class="deck" id="deck">
+    <!-- 1 -->
+    <section class="slide active" data-slide="0" aria-hidden="false">
+      <div class="logo-row"><span>★</span> i.c.stars · Tech showcase</div>
+      <div class="slide-hero">
+        <div>
+          <h1><span class="accent">Tech Pathway Navigator</span></h1>
+          <p class="tagline">From Cycle 19 — inspire Cycle 20’s showcase ideas</p>
+          <p>Something <strong>beneficial</strong> and <strong>helpful</strong>, built for people figuring out tech careers.</p>
+        </div>
+        <div>
+          <img src="icstars-logo.png" alt="i.c.stars" class="hero-logo" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="slide" data-slide="1" aria-hidden="true">
+      <h2>What we’ll cover</h2>
+      <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">Aligned with how we’re asked to share project experience — clear, relatable, conversational.</p>
+      <div class="slide-grid-2">
+        <div class="slide-panel">
+          <h3>1. The problem</h3>
+          <p>What problem, who it was for — simple and relatable.</p>
+        </div>
+        <div class="slide-panel">
+          <h3>2. The solution</h3>
+          <p>What I built and why it works — light on deep tech, heavy on impact.</p>
+        </div>
+        <div class="slide-panel">
+          <h3>3. Role &amp; ownership</h3>
+          <p>Ideas, UX, shipping — and how to talk about tools honestly (including on <strong>team projects</strong>, where clarity matters).</p>
+        </div>
+        <div class="slide-panel">
+          <h3>4. How to talk about it</h3>
+          <p>Guests, employers, expo — what worked and what I’d do differently.</p>
+        </div>
+        <div class="slide-panel" style="grid-column: 1 / -1;">
+          <h3>Then: brainstorm + Q&amp;A</h3>
+          <p>Brief brainstorm prompts for Cycle 20, then open Q&amp;A.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="slide" data-slide="2" aria-hidden="true">
+      <h2>Quick intro</h2>
+      <ul>
+        <li>Cycle 19 intern — I commenced in <strong>December</strong>; I’m now a <strong>Cloud Security Engineer Intern</strong>. I’m here to help this cohort and the <strong>i.c.stars</strong> community.</li>
+        <li>I’ll follow the <strong>four-part story</strong> (problem → solution → my role → how I talk about it), then a few ideas for the <strong>Cycle 20</strong> showcase.</li>
+        <li>Goal: a clear model for <strong>telling a coherent story</strong> with confidence — not copying this exact build.</li>
+      </ul>
+    </section>
+
+    <!-- 4 -->
+    <section class="slide" data-slide="3" aria-hidden="true">
+      <p class="slide-kicker">1. The problem</p>
+      <h2>How I landed on this</h2>
+      <ul>
+        <li>Coming into <strong>i.c.stars</strong>, I was new to tech — I didn’t know the roles or what was even out there.</li>
+        <li>I built this because I know <strong>many interns were in the same position as me</strong>: overwhelmed by titles and unsure where to start.</li>
+        <li>The goal was simple: a friendly place to explore paths in plain language — quiz, matches, deeper info, and real links — so someone can take a <strong>clearer next step</strong>.</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section class="slide" data-slide="4" aria-hidden="true">
+      <h2>The north star — a simple guide</h2>
+      <p>Before picking tools or features, answer these three questions. They keep the project <strong>grounded</strong> and <strong>helpful</strong>.</p>
+      <ul>
+        <li><strong>Who exactly is this for?</strong> One real group (e.g. new interns, family, job seekers). If it’s for “everyone,” narrow it until it isn’t.</li>
+        <li><strong>What should they leave with?</strong> One concrete outcome: a next step, a clearer choice, or less stress — not “inspiration” alone.</li>
+        <li><strong>What happens in the first minute?</strong> — A visitor should open it cold, know what to tap or read, and get something useful right away. If the demo needs a long explanation up front, cut scope until the opening is obvious.</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section class="slide" data-slide="5" aria-hidden="true">
+      <p class="slide-kicker">2. The solution</p>
+      <h2>What it is (one sentence)</h2>
+      <p><strong>Tech Pathway Navigator</strong> is a short quiz that matches someone to possible tech career paths, then shows plain-language deep dives and curated learning links — including certifications and regions when relevant.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="slide" data-slide="6" aria-hidden="true">
+      <h2>User flow (at a glance)</h2>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="icon" aria-hidden="true">❓</div>
+          <div class="label">Questions</div>
+          <div class="sub">Work &amp; learning style</div>
+        </div>
+        <div class="flow-step">
+          <div class="icon" aria-hidden="true">🏆</div>
+          <div class="label">Matches</div>
+          <div class="sub">Top roles ranked</div>
+        </div>
+        <div class="flow-step">
+          <div class="icon" aria-hidden="true">📖</div>
+          <div class="label">Deep dive</div>
+          <div class="sub">Day-to-day &amp; salary</div>
+        </div>
+        <div class="flow-step">
+          <div class="icon" aria-hidden="true">🔗</div>
+          <div class="label">Resources</div>
+          <div class="sub">Courses &amp; certs</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="slide" data-slide="7" aria-hidden="true">
+      <h2>How it works</h2>
+      <ul>
+        <li><strong>Questions</strong> — how someone likes to work, learn, and grow.</li>
+        <li><strong>Top matches</strong> — ranked roles with short descriptions.</li>
+        <li><strong>Deep dive</strong> — day-to-day, how to get there, salary context.</li>
+        <li><strong>Resources</strong> — courses, certs, practice tools (linked out).</li>
+      </ul>
+    </section>
+
+    <!-- 9 -->
+    <section class="slide" data-slide="8" aria-hidden="true">
+      <h2>What it’s built with</h2>
+      <p>Plain <strong>HTML, CSS, and JavaScript</strong> — no heavy framework. Implemented with <strong>Cursor</strong> (AI-assisted coding); the next slide is <strong>what I owned</strong> — ideas and layout vs. where the tool helped — and how I think about that for interviews.</p>
+      <div class="pill-row">
+        <span class="pill">Responsive</span>
+        <span class="pill">Accessible basics</span>
+        <span class="pill">Bilingual (EN / ES)</span>
+        <span class="pill">AI-assisted dev (Cursor)</span>
+      </div>
+      <div class="mock-browser">
+        <div class="mock-browser-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="mock-browser-body">
+          <img src="demo-pathway-navigator.gif" width="960" height="540" alt="Screen recording: last two quiz questions, then results screen" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="slide" data-slide="9" aria-hidden="true">
+      <h2>Who it’s for</h2>
+      <div class="slide-grid-2">
+        <div class="slide-panel">
+          <h3>Interns &amp; career changers</h3>
+          <p>Exploring roles without getting lost in <strong>confusing job titles and buzzwords</strong>.</p>
+        </div>
+        <div class="slide-panel">
+          <h3>Coaches &amp; mentors</h3>
+          <p>Still beneficial for <strong>coaches in 1:1s</strong> — review paths together, talk through matches, and point to concrete next steps.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section class="slide" data-slide="10" aria-hidden="true">
+      <p class="slide-kicker">3. Role &amp; ownership</p>
+      <h2>What I owned</h2>
+      <p>I own this project <strong>end-to-end</strong>: the ideas, what I wanted the app to do, and the layout — how it reads and flows. <strong>Cursor</strong> helped me implement faster, but the decisions and UX were mine. I started in <strong>VS Code</strong>; it was really bumpy. At my <strong>current job</strong> I got introduced to Cursor and saw how <strong>AI-assisted coding</strong> (including what people call vibe coding) is <strong>normalized</strong> — bigger companies use these tools every day, not as a shortcut but as part of how work gets done.</p>
+      <ul>
+        <li><strong>Quiz &amp; what’s on the page:</strong> what the questions are, how answers map to roles, the short blurbs for each path, and the resource links I pulled together.</li>
+        <li><strong>How it looks &amp; reads:</strong> layout, colors, making it work on a phone or a laptop — English and Spanish so more people can use it.</li>
+        <li><strong>Actually online:</strong> hosted it so there’s a real link people can open during the expo — not just a file on my computer.</li>
+      </ul>
+      <p style="margin-top: 0.75rem; font-size: 0.92rem; color: var(--text-muted);"><strong>For cohorts:</strong> In my cycle many people worked on projects <strong>together</strong> — that’s normal — but guests still need an <strong>individual</strong> thread per person. When work is paired or split, name what was <strong>each person’s</strong> vs. support; with AI, name what each person <strong>steered and stood behind</strong>. That honesty reads well.</p>
+    </section>
+
+    <!-- 12 -->
+    <section class="slide" data-slide="11" aria-hidden="true">
+      <p class="slide-kicker">4. How to talk about it</p>
+      <h2>How I explain this to guests &amp; employers</h2>
+      <ul>
+        <li><strong>My pitch:</strong> one sentence on the problem → quick walkthrough (quiz → matches → deep dive → resources) → optional live demo or QR.</li>
+        <li><strong>What worked:</strong> leading with <em>why it exists</em>, explaining it in <strong>plain language</strong> anyone in the room can follow, and letting people <strong>try it</strong> on their phone.</li>
+        <li><strong>What I’d do differently:</strong> practice a tighter 2-minute version; even fewer slides; repeat the “who it’s for” line so it sticks.</li>
+      </ul>
+      <p style="margin-top: 0.75rem; font-size: 0.92rem; color: var(--text-muted);">This part is often the most useful for interns — <strong>communicating</strong> the work clearly, not only listing what got built.</p>
+    </section>
+
+    <!-- 13 -->
+    <section class="slide" data-slide="12" aria-hidden="true">
+      <h2>Try it — scan the QR</h2>
+      <div class="try-layout">
+        <div>
+          <p>Open the navigator on a phone: <strong>start</strong> → answer a few questions → <strong>results</strong> → expand a role → <strong>resources</strong>.</p>
+        </div>
+        <div class="qr-box">
+          <img id="qr-demo-img" src="qr-demo.png" width="220" height="220" alt="QR code to open the Tech Pathway demo" />
+          <p id="qr-url-caption" class="url-caption"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 -->
+    <section class="slide" data-slide="13" aria-hidden="true">
+      <h2>Getting ideas for a showcase project</h2>
+      <ul>
+        <li><strong>Who</strong> — one group the project cares about (cohort, family, community).</li>
+        <li><strong>Pain</strong> — what’s confusing, slow, or stressful?</li>
+        <li><strong>Why tech?</strong> — how could a simple site or app help more than a flyer, email, or PDF?</li>
+        <li><strong>Scope</strong> — something <strong>demoable in 2–3 minutes</strong>.</li>
+        <li><strong>Why it matters</strong> — one sentence.</li>
+      </ul>
+    </section>
+
+    <!-- 15 -->
+    <section class="slide" data-slide="14" aria-hidden="true">
+      <h2>Quick brainstorm (optional)</h2>
+      <p>In pairs or small groups: <em>What problem is someone in the community facing?</em> Write one sentence idea + who it helps.</p>
+      <p><strong>Example:</strong> <em>“A small site that lists free community resources (food, childcare, clinics) by neighborhood — for people who don’t know what’s available or how to apply.”</em></p>
+      <p>Share 2–3 out loud if there’s time.</p>
+    </section>
+
+    <!-- 16 -->
+    <section class="slide" data-slide="15" aria-hidden="true">
+      <h2>Takeaways</h2>
+      <ul>
+        <li>Start from <strong>real need</strong>, not the coolest tech.</li>
+        <li>Ship something small people can <strong>try in the room</strong>.</li>
+        <li>Each person’s story is part of the showcase — own it.</li>
+      </ul>
+    </section>
+
+    <!-- 17 -->
+    <section class="slide" data-slide="16" aria-hidden="true">
+      <h2>Closing</h2>
+      <p>One takeaway: <strong>pick a problem that actually matters</strong> — then ship the <strong>smallest real thing</strong> that lifts someone else up. That’s how real showcase projects (and real careers) start.</p>
+      <p class="tagline" style="margin-top: 1rem;">Questions?</p>
+      <p style="margin-top: 0.5rem;">Thank you — good luck with the Cycle 20 showcase.</p>
+    </section>
+  </div>
+
+  <div class="footer-bar">
+    <span id="slide-label">Slide 1 / 17</span>
+    <span><kbd>←</kbd> <kbd>→</kbd> or swipe · <kbd>Home</kbd> / <kbd>End</kbd></span>
+  </div>
+
+  <script src="slides-config.js"></script>
+  <script>
+    (function () {
+      const demoUrl = (typeof window.TECH_PATHWAY_DEMO_URL === 'string' && window.TECH_PATHWAY_DEMO_URL.trim())
+        ? window.TECH_PATHWAY_DEMO_URL.trim()
+        : 'https://ajmowrey1227-hub.github.io/pathway-navigator/';
+      const qrImg = document.getElementById('qr-demo-img');
+      const qrCaption = document.getElementById('qr-url-caption');
+      if (qrImg) {
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=' + encodeURIComponent(demoUrl);
+        qrImg.alt = 'QR code to open ' + demoUrl;
+      }
+      if (qrCaption) {
+        qrCaption.textContent = demoUrl;
+      }
+    })();
+
+    (function () {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      let i = 0;
+
+      function show(n) {
+        i = Math.max(0, Math.min(n, slides.length - 1));
+        slides.forEach((s, idx) => {
+          const on = idx === i;
+          s.classList.toggle('active', on);
+          s.setAttribute('aria-hidden', on ? 'false' : 'true');
+        });
+        document.getElementById('slide-label').textContent = 'Slide ' + (i + 1) + ' / ' + slides.length;
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          show(i + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          show(i - 1);
+        } else if (e.key === 'Home') {
+          show(0);
+        } else if (e.key === 'End') {
+          show(slides.length - 1);
+        }
+      });
+
+      let touchStartX = null;
+      document.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      document.addEventListener('touchend', function (e) {
+        if (touchStartX === null) return;
+        const dx = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(dx) > 50) {
+          if (dx < 0) show(i + 1);
+          else show(i - 1);
+        }
+        touchStartX = null;
+      }, { passive: true });
+
+      show(0);
+    })();
+  </script>
+</body>
+</html>
