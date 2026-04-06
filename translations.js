@@ -23,12 +23,16 @@ const TRANSLATIONS = {
     results: {
       title: 'Your Tech Pathway Results',
       intro: 'Based on your answers, here are your top matches. Tap a card to dive deeper.',
+      disclaimer:
+        'These matches are suggestions based on your answers—not career advice. Explore further with mentors and real job postings.',
       viewResources: 'View All Resources',
       retake: 'Retake Navigator',
       whatIsRole: 'What is this role?',
       dayToDay: 'Day to day',
       howToGetThere: 'How to get there',
       salaryRange: 'Salary range ({region})',
+      salaryApprox: 'Approximate ranges — actual pay varies by role, company, and timing.',
+      salaryReviewed: 'Last reviewed: April 2026',
       seeResources: 'See all resources →',
     },
     skipLink: 'Skip to main content',
@@ -91,12 +95,16 @@ const TRANSLATIONS = {
     results: {
       title: 'Tus Resultados de Ruta Tech',
       intro: 'Según tus respuestas, aquí están tus mejores opciones. Toca una tarjeta para más detalles.',
+      disclaimer:
+        'Estas coincidencias son sugerencias según tus respuestas—no son asesoría profesional. Profundiza con mentores y ofertas de trabajo reales.',
       viewResources: 'Ver Todos los Recursos',
       retake: 'Repetir Navegador',
       whatIsRole: '¿Qué es este rol?',
       dayToDay: 'Día a día',
       howToGetThere: 'Cómo llegar ahí',
       salaryRange: 'Rango salarial ({region})',
+      salaryApprox: 'Rangos aproximados — el salario real varía según el rol, la empresa y el momento.',
+      salaryReviewed: 'Última revisión: abril de 2026',
       seeResources: 'Ver todos los recursos →',
     },
     skipLink: 'Saltar al contenido principal',
